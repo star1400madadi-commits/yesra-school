@@ -1,0 +1,106 @@
+<!DOCTYPE html><html lang="fa">
+<head>
+<meta charset="UTF-8">
+<title>آموزشگاه عالی یسرا</title>
+<style>
+body {
+  font-family: sans-serif;
+  background: linear-gradient(135deg, #1e3c72, #2a5298);
+  color: white;
+  text-align: center;
+  padding: 20px;
+}
+.box {
+  background: rgba(255,255,255,0.1);
+  padding: 20px;
+  border-radius: 15px;
+  max-width: 400px;
+  margin: 15px auto;
+}
+input {
+  width: 80%;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  margin: 5px;
+}
+button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 8px;
+  background: #00c6ff;
+  color: white;
+  cursor: pointer;
+  margin-top: 5px;
+}
+.result { margin-top: 15px; }
+</style>
+</head><body><h2>📘 آموزشگاه عالی یسرا</h2><!-- 🔍 بخش مشاهده نتیجه --><div class="box">
+  <h3>مشاهده نتیجه</h3>
+  <input type="text" id="id" placeholder="آیدی">
+  <input type="password" id="pass" placeholder="رمز">
+  <br>
+  <button onclick="login()">نمایش نتیجه</button>
+  <div class="result" id="result"></div>
+</div><!-- 🔐 ورود ادمین --><div class="box">
+  <h3>ورود ادمین</h3>
+  <input type="password" id="adminPass" placeholder="رمز ادمین">
+  <br>
+  <button onclick="adminLogin()">ورود</button>
+</div><!-- ➕ فرم افزودن --><div class="box" id="adminPanel" style="display:none;">
+  <h3>افزودن دانش‌آموز</h3>
+  <input type="text" id="name" placeholder="نام">
+  <input type="number" id="score" placeholder="نمره">
+  <input type="password" id="newPass" placeholder="رمز">
+  <br>
+  <button onclick="addStudent()">ثبت</button>
+  <div id="msg"></div>
+</div><script>
+let students = JSON.parse(localStorage.getItem("students")) || {};
+let nextId = parseInt(localStorage.getItem("nextId")) || 1001;
+
+// 🔍 نمایش نتیجه
+function login() {
+  const id = document.getElementById("id").value;
+  const pass = document.getElementById("pass").value;
+  const res = document.getElementById("result");
+
+  if (students[id] && students[id].pass === pass) {
+    res.innerHTML = "👤 " + students[id].name + "<br>📊 نمره: " + students[id].score;
+  } else {
+    res.innerHTML = "❌ اطلاعات اشتباه";
+  }
+}
+
+// 🔐 ورود ادمین
+function adminLogin() {
+  const pass = document.getElementById("adminPass").value;
+
+  if (pass === "admin123") {
+    document.getElementById("adminPanel").style.display = "block";
+  } else {
+    alert("رمز اشتباه!");
+  }
+}
+
+// ➕ افزودن دانش‌آموز
+function addStudent() {
+  const name = document.getElementById("name").value;
+  const score = document.getElementById("score").value;
+  const pass = document.getElementById("newPass").value;
+
+  if (!name || !score || !pass) {
+    alert("همه فیلدها را پر کن");
+    return;
+  }
+
+  const id = nextId++;
+  students[id] = {name: name, score: score, pass: pass};
+
+  localStorage.setItem("students", JSON.stringify(students));
+  localStorage.setItem("nextId", nextId);
+
+  document.getElementById("msg").innerHTML = "✅ ثبت شد<br>آیدی: " + id;
+}
+</script></body>
+</html>
